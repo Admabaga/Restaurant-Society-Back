@@ -25,8 +25,8 @@ public class ProductController {
         return productService.getProducts();
     }
 
-    @PutMapping("/products")
-    public ProductDTO updateProduct(@RequestBody ProductDTO productDTO, @PathVariable Long productId){
+    @PutMapping("/products/{productId}")
+    public ProductDTO updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO ){
         return  productService.updateProduct(productDTO, productId);
     }
 }
