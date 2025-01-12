@@ -20,6 +20,9 @@ public class User implements UserDetails {
     private String phoneNumber;
     private String userRol;
 
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
+
     public User() {
     }
 
