@@ -1,9 +1,15 @@
 package com.project.RestaurantSociety.Entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Long userId;
@@ -12,16 +18,26 @@ public class User {
     private String userMail;
     private String password;
     private String phoneNumber;
+    private String userRol;
 
     public User() {
     }
 
-    public User(Long userId, String userName, String userMail, String password, String phoneNumber) {
+    public User(Long userId, String userName, String userMail, String password, String phoneNumber, String userRol) {
         this.userId = userId;
         this.userName = userName;
         this.userMail = userMail;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.userRol = userRol;
+    }
+
+    public String getUserRol() {
+        return userRol;
+    }
+
+    public void setUserRol(String userRol) {
+        this.userRol = userRol;
     }
 
     public Long getUserId() {
@@ -73,5 +89,34 @@ public class User {
                 ", password='" + password + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.userRol));
+    }
+    @Override
+    public String getUsername() {
+        return this.userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

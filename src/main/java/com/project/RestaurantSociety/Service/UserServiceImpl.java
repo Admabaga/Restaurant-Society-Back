@@ -4,6 +4,7 @@ import com.project.RestaurantSociety.Converter.UserConverter;
 import com.project.RestaurantSociety.DTO.UserDTO;
 import com.project.RestaurantSociety.Entity.User;
 import com.project.RestaurantSociety.Repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,15 +12,19 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         User user = UserConverter.dtoToEntity(userDTO);
         fieldValidation(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setUserRol("USER");
         userRepository.save(user);
         return UserConverter.entityToDto(user);
     }
