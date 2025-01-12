@@ -1,5 +1,6 @@
 package com.project.RestaurantSociety.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -9,6 +10,7 @@ public class Product {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(unique = true)
     private String productName;
     private Double productPrice;
     private String description;
