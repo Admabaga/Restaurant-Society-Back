@@ -15,17 +15,17 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/products")
-    public ProductDTO createProduct(@RequestBody ProductDTO productDTO){
-        return  productService.createProduct(productDTO);
+    @PostMapping("/users/{userId}/products")
+    public ProductDTO createProduct(@RequestBody ProductDTO productDTO, @PathVariable Long userId){
+        return  productService.createProduct(productDTO, userId);
     }
 
-    @GetMapping("/products")
-    public List<ProductDTO> getProducts(){
-        return productService.getProducts();
+    @GetMapping("/users/{userId}/products")
+    public List<ProductDTO> getProducts(@PathVariable Long userId){
+        return productService.getProducts(userId);
     }
 
-    @PutMapping("/products/{productId}")
+    @PutMapping("/users/{userId}/products/{productId}")
     public ProductDTO updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO ){
         return  productService.updateProduct(productDTO, productId);
     }

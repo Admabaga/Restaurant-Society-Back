@@ -1,9 +1,6 @@
 package com.project.RestaurantSociety.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Product {
@@ -15,6 +12,10 @@ public class Product {
     private Double productPrice;
     private String description;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
+
     public Product() {
     }
 
@@ -23,6 +24,14 @@ public class Product {
         this.productName = productName;
         this.productPrice = productPrice;
         this.description = description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {

@@ -3,7 +3,9 @@ package com.project.RestaurantSociety.Service;
 import com.project.RestaurantSociety.Converter.ProductConverter;
 import com.project.RestaurantSociety.DTO.ProductDTO;
 import com.project.RestaurantSociety.Entity.Product;
+import com.project.RestaurantSociety.Entity.User;
 import com.project.RestaurantSociety.Repository.ProductRepository;
+import com.project.RestaurantSociety.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,22 +16,34 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService{
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, UserRepository userRepository) {
         this.productRepository = productRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public ProductDTO createProduct(ProductDTO productDTO) {
+    public ProductDTO createProduct(ProductDTO productDTO, Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()){
+            throw new RuntimeException("Usuario no existe.");
+        }
+        User user = userOptional.get();
         Product product = ProductConverter.dtoToEntity(productDTO);
         fieldValidate(product);
+        product.setUser(user);
         productRepository.save(product);
         return ProductConverter.entityToDto(product);
     }
 
     @Override
-    public List<ProductDTO> getProducts() {
-        List<Product> products = productRepository.findAll();
+    public List<ProductDTO> getProducts(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()){
+            throw new RuntimeException("Usuario no existe.");
+        }
+        List<Product> products = productRepository.findUserProductsById(userId);
         return products.stream()
                 .map(ProductConverter::entityToDto)
                 .collect(Collectors.toList());
